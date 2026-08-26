@@ -93,3 +93,4 @@ reverse-artifacts/
 - Function renaming not bulk-applied
 - Comments not added to functions
 - **Priority:** Implementation phase (requires Ghidra tool calls)
+- Powered by Gigacode, Context7 MCP, Bethington/GhidraMCP
