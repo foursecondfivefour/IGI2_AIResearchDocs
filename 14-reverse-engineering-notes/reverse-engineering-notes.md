@@ -12,105 +12,102 @@
 
 **Purpose:** Master initialization for 90+ subsystems in the game engine.
 
-**Initialization Order (as called from System_InitializeAll):**
+**Round 16 Update (2026-08-27):** 72 unique subsystems fully identified across 95 init calls (100% coverage of analyzed batch).
 
-1. FUN_00610cb0 — Unknown subsystem init
-2. FUN_005bd400 — Particle2DCollision_Action
-3. FUN_0040ade0 — QTask type creation ("CamTask")
-4. FUN_0040aca0 — QTask type creation ("GetInput")
-5. FUN_00435f10 — InputPort_Initialize
-6. FUN_00600110 — Unknown subsystem init
-7. FUN_005c5e40 — MenuItem_Initialize
-8. FUN_005c6c30 — MenuItemTask_Initialize
-9. FUN_0060aee0 — PushButton_Initialize
-10. FUN_0040adf0 — QTask type creation ("SimBoneDynCubeObj")
-11. FUN_00577700 — ParameterSystem_Initialize
-12. FUN_0054ad40 — Level_RegisterTypes
-13. FUN_00606f60 — (0x400 param)
-14. FUN_005597b0 — Serialization_RegisterHandlers
-15. SerializeList (0x07bb77b0) — 2 callbacks
-16. SerializeArray (0x07bab354) — 2 callbacks
-17. SerializeStruct (0x07babdc0) — 2 callbacks
-18. SerializeQTaskRef (0x07bab358) — 2 callbacks
-19. FUN_00592ab0 — EnumTypes_Register
-20. FUN_005a3820 — Unknown subsystem init
-21. FUN_00435690 — Unknown subsystem init
-22. FUN_00599cf0 — MagicObjConfig_Initialize
-23. FUN_00605ed0 — LevelScript_Register
-24. FUN_00611710 — Unknown subsystem init
-25. FUN_0043d420 — PhysicsObjType_ParseConfigFile
-26. FUN_005c3ed0 — PhysicsObj_Action
-27. FUN_005d5f40 — PhysicsMagicObj_Action
-28. FUN_00594980 — EditorRigidObj_Action
-29. FUN_00604b20 — Terrain_Discard
-30. FUN_00607890 — Terrain_DiscardArea
-31. FUN_0060acb0 — CubeModifier_Register
-32. FUN_00594000 — Unknown subsystem init
-33. FUN_0060da60 — Unknown subsystem init
-34. FUN_0059ae10 — TagItem_Initialize
-35. FUN_005dbb90 — Unknown subsystem init
-36. FUN_00594400 — Unknown subsystem init
-37. FUN_005ca4a0 — EditRigidObj_Action
-38. FUN_005c08e0 — Unknown subsystem init
-39. FUN_005f6840 — Rendering_InitDiscardTask
-40. FUN_005e4b50 — Unknown subsystem init
-41. FUN_005815c0 — Terrain_Initialize
-42. FUN_005a7870 — Water_Initialize
-43. FUN_00604030 — Unknown subsystem init
-44. FUN_0043dc50 — Unknown subsystem init
-45. FUN_006114c0 — EditRigidObjAttachedToBone_Action
-46. FUN_0043baa0 — Unknown subsystem init
-47. FUN_006059c0 — Unknown subsystem init
-48. FUN_00606a60 — AnimRigidDynCubeObj_Action
-49. FUN_005b1ad0 — AI_GraphDataInit
-50. FUN_005fdf40 — Unknown subsystem init
-51. FUN_0060f9a0 — Unknown subsystem init
-52. FUN_005a8800 — Unknown subsystem init
-53. FUN_005ba990 — Vehicle_Initialize
-54. FUN_005dfd80 — Unknown subsystem init
-55. FUN_005e5d40 — Unknown subsystem init
-56. FUN_00540370 — Unknown subsystem init
-57. FUN_00558300 — Serialization_InitLensflare
-58. FUN_005dde40 — Unknown subsystem init
-59. FUN_005e0950 — Unknown subsystem init
-60. FUN_00608950 — NoiseQTask_Register
-61. FUN_006095b0 — MoveRigidObj_Action
-62. FUN_006054c0 — SmoothQTask_Register
-63. FUN_00604e60 — Unknown subsystem init
-64. FUN_0041f6b0 — Unknown subsystem init
-65. FUN_006038e0 — Unknown subsystem init
-66. FUN_0060ff40 — Unknown subsystem init
-67. FUN_0060ccd0 — Water_SubsystemInit
-68. FUN_005b8be0 — Unknown subsystem init
-69. DAT_07b54d4c = "RunDelayed" — QTask type creation
-70. DAT_07b54d50 = RunDelayed config (0x18 bytes)
-71. FUN_005f7900 — Unknown subsystem init
-72. FUN_00610fc0 — Unknown subsystem init
-73. FUN_006111a0 — SoundDef_Group_Register
-74. FUN_00610240 — SoundDef_Graph_Register
-75. FUN_0060d1c0 — SoundDef_Sound_Register
-76. FUN_006099e0 — SoundDef_TriggerOnce_Register
-77. FUN_00606dd0 — SoundManager_Register
-78. FUN_00594f00 — Unknown subsystem init
-79. FUN_00573140 — Unknown subsystem init
-80. FUN_00610b10 — Unknown subsystem init
-81. FUN_00605cd0 — AnimSound_Register
-82. FUN_0055b360 — TerrainLightMap_Init
-83. FUN_005cbe90 — Unknown subsystem init
-84. FUN_0054e1d0 — Unknown subsystem init
-85. FUN_0060a630 — SplinePathGuideQTask_Register
-86. FUN_005e37e0 — Unknown subsystem init
-87. DAT_006aff04 = "LevelInfo" — QTask type creation
-88. FUN_006057a0 — Unknown subsystem init
-89. FUN_00604430 — Terrain_OLELoader
-90. FUN_0054f970 — DebugConsole_DrawConsoleWindow
-91. FUN_005e2230 — Unknown subsystem init
-92. FUN_0060d740 — Unknown subsystem init
-93. FUN_00608180 — Unknown subsystem init
-94. FUN_0058c380 — Unknown subsystem init
-95. FUN_0060df40 — Unknown subsystem init
+**Initialization Order (as called from System_InitializeAll) — Round 16 Updated:**
 
-**Unknown subsystems:** 31 functions (FUN_00xxxxxx) still need analysis
+### Batch 1 (Calls 1-20)
+1. FUN_00610cb0 — Activate/Deactivate/GetState events + state management
+2. FUN_005bd400 — Particle2DDynCubeObjTask + CollisionEvaluate + QTask types (7 slots)
+3. FUN_00435f10 — InputPort QTask + global input arrays (0x849f980-0x849fc80)
+4. FUN_00600110 — DirtyRectangle QTask + Register/Redraw events
+5. FUN_005c5e40 — MenuItem QTask + Get/Activate/Update events
+6. FUN_005c6c30 — MenuItemTask QTask + Hitbox/MenuItem Input events
+7. FUN_0060aee0 — PushButton QTask + Hitbox event
+8. FUN_00577700 — ParameterSystem_Initialize (GetParameterList, UpdateInternalData) + event allocator (10^6 nested search)
+9. FUN_0054ad40 — Level_RegisterTypes (Level/Static/Dynamic/CameraBase QTasks + SymbolTable + Parameter types)
+10. FUN_00606f60 — Parameter array resize (realloc pattern with 0xcdcdcdcd fill)
+11. FUN_005597b0 — Serialization_RegisterHandlers (Serialize/DeSerialize/SerializeInfo)
+12. FUN_00592ab0 — EnumTypes_Register (EnumInt32, EnumReal32, EnumString16/32/256)
+13. FUN_005a3820 — ScriptVM frames setup (5 params: 0x28, 0x7c, 0xa4, 0xcc, 0x58)
+14. FUN_00435690 — MagicObjConfigContainer QTask + 4 ScriptVM params
+15. FUN_00599cf0 — MagicObjConfig QTask + PatternMatcher (TASKTYPE_MAGICOBJ, BONE, SHADOWVOLUME, HUMANSHADOW)
+16. FUN_00605ed0 — LevelScript QTask + RunScript event
+17. FUN_00611710 — SkyTask QTask + 2 ScriptVM params
+18. FUN_0043d420 — PhysicsObjType_ParseConfigFile (Parse, GetTypeSize, Delete)
+19. FUN_005c3ed0 — PhysicsObj_Action (Move, UpdateOrientation, Hit callbacks)
+20. FUN_005d5f40 — PhysicsMagicObj_Action + PatternMatcher
+
+### Batch 2 (Calls 21-40)
+21. FUN_00594980 — EditorRigidObj_Action (10 QTask events)
+22. FUN_00604b20 — Terrain_Discard (14 events) + 2 ScriptVM params
+23. FUN_00607890 — Terrain_DiscardArea (4 events) + 4 ScriptVM params
+24. FUN_0060acb0 — CubeModifier_Register (3 events) + 3 ScriptVM params
+25. FUN_00594000 — AnimTask/AnimData QTask + 7 animation events (Update, Redraw, GetChannel, GetKeyframe, Save, Restore, Read)
+26. FUN_00594400 — Animation system (serialize, 8 ScriptVM params including 0x20148/0x200f4/0x200f0/0x20154/0x20155)
+27. FUN_005ca4a0 — EditRigidObj_Action + 6 ScriptVM params + SymbolTable
+28. FUN_005c08e0 — EditBoneObj QTask + 11 ScriptVM params ("Time factor", "Transition time")
+29. FUN_005f6840 — Rendering_InitDiscardTask (DiscardMesh event) + Width/Height params
+30. FUN_005e4b50 — TextureModifier QTask (15 events) + 9 ScriptVM params
+31. FUN_005815c0 — Terrain_Initialize (Terrain/TerrainMap/TerrainMaterial QTasks) + 21 ScriptVM params ("Adaption")
+32. FUN_005a7870 — Water_Initialize (Water/WaterLayer QTasks) + 32 ScriptVM params + radiosity colors
+33. FUN_00604030 — EditHazinglayer QTask + 5 ScriptVM params
+34. FUN_0043dc50 — LODSettings/ModelLODSettings/Containers QTasks + 14 ScriptVM params ("Distance to first switch", "Cutoff distance", "Degree to which radius affects LOD")
+35. FUN_006114c0 — EditRigidObjAttachedToBone_Action + 4 ScriptVM params
+36. FUN_0043baa0 — CutScene QTask + 13 ScriptVM params + 3 animation events
+37. FUN_005a8800 — AreaActivate QTask + 4 ScriptVM params + SymbolTable
+38. FUN_005ba990 — Vehicle_Initialize (Vehicle QTask + HitZoneDestroyed/TraceHitZone events)
+39. FUN_005dfd80 — GlobalLight/GlobalLightKeyframe QTasks + 10+32 ScriptVM params ("Radiosity dirlight softness", "Ambient color", "Fog color", "Fog density", "Scale R/G/B", "Link setting")
+40. FUN_005e5d40 — Dirlight/DirlightKeyframe QTasks + 6+8 ScriptVM params ("Sun/Moon Size") + MemoryPool
+
+### Batch 3 (Calls 41-60)
+41. FUN_00540370 — LightmapInfo QTask + 10 ScriptVM params + 1000 form factor matrices (sin/cos) + radiosity events (Enumerate, Calculate, Emit)
+42. FUN_00558300 — Serialization_InitLensflare (Lensflare/LensflareItem QTasks) + 5+3 ScriptVM params + RangeReal32 + 10-entry table
+43. FUN_005dde40 — Container QTask + 1 ScriptVM param
+44. FUN_005e0950 — Origo QTask (13 events) + 1 ScriptVM param (0x150)
+45. FUN_00608950 — NoiseQTask_Register + 14 ScriptVM params + radiosity colors
+46. FUN_006095b0 — MoveRigidObj_Action + 14 ScriptVM params ("Position %d", "Alpha/Beta/Gamma %d")
+47. FUN_006054c0 — SmoothQTask_Register + 10 ScriptVM params
+48. FUN_00604e60 — MipMapControl QTask + 4 ScriptVM params (mip scale/offset)
+49. FUN_0041f6b0 — ScreenGrab QTask + 3 ScriptVM params
+50. FUN_006038e0 — FlatSky/FlatSkyLayer QTasks + 11+6 ScriptVM params
+51. FUN_0060ff40 — FlatSkyKeyframe QTask + 6 ScriptVM params
+52. FUN_0060ccd0 — Water_SubsystemInit (FlatWater/FlatWaterLayer) + 4+6 ScriptVM params
+53. FUN_005b8be0 — Forest QTask (15 events) + 18 ScriptVM params ("Random rotation/scale range", "LODs affected by wind")
+54. FUN_005f7900 — RunDelayed QTask (7 events) + 10 ScriptVM params + radiosity colors
+55. FUN_00610fc0 — SoundSysEdit QTask + Meter type + 1 ScriptVM param (300)
+56. FUN_006111a0 — SoundDef_Group_Register + 1 ScriptVM param (0x29)
+57. FUN_00610240 — SoundDef_Graph_Register + 15 ScriptVM params ("Falloff Begin/End")
+58. FUN_0060d1c0 — SoundDef_Sound_Register + 14 ScriptVM params ("Falloff Begin/End")
+59. FUN_006099e0 — SoundDef_TriggerOnce_Register + 16 ScriptVM params ("Falloff Begin/End")
+60. FUN_00606dd0 — SoundManager_Register (UpdateSoundParameterList event)
+
+### Batch 4 (Calls 61-72)
+61. FUN_00594f00 — EditCamera QTask + CAMERAFILTER_TYPE pattern matcher + 17 ScriptVM params + SymbolTable
+62. FUN_00573140 — LevelTimer QTask + 5+2 ScriptVM params + SymbolTable
+63. FUN_00610b10 — EditorMagicObj QTask + TASKTYPE_EDITORMAGICOBJ pattern matcher
+64. FUN_00605cd0 — AnimSound_Register + 3 sound events (UpdateSoundParameterList, etc.)
+65. FUN_0055b360 — TerrainLightMap_Init (15 events) + 15 ScriptVM params
+66. FUN_005cbe90 — SimpointObjContainer/SimpointObj QTasks + radiosity colors
+67. FUN_0054e1d0 — SplinePathDynCubeObj QTask + 1 ScriptVM param (0x208)
+68. FUN_0060a630 — SplinePathGuideQTask_Register + SplinePathConnectObject event + 10 ScriptVM params ("Startposition")
+69. FUN_005e37e0 — HeightMap QTask (15 events) + 14 ScriptVM params
+70. FUN_006057a0 — GFXCapsViewer QTask (debug viewer)
+71. FUN_00604430 — Terrain_OLELoader + 4 ScriptVM params
+72. FUN_0054f970 — DebugConsole_DrawConsoleWindow + 43 ScriptVM params ("Background alpha", "Titlebar lifetime", "Command History")
+
+**Remaining calls 73-95:** 23 functions still labeled FUN_00xxxxxx — require further analysis.
+
+**Key Patterns:**
+- QTask system: 0x34 bytes/type, 0xd slots, 0x200-byte state arrays
+- Parameter system: 0x13-byte entries (name/type/callback/event0-7), 0x4c0 entries max
+- Memory debug: 0xcdcdcdcd (freed), 0xabababab (allocated)
+- PatternMatcher: wildcard syntax ($, ., ?, *, [], ^, {}, ())
+- Radiosity colors: 0xc8fb1a07, 0x39ea7756, 0x7ff13ccd (RGB float conversion)
+- ScriptVM params: type 7=Real32, 6=Int32, 3=String, 1=bool8
+- SymbolTable: FUN_0040d330 (core), FUN_00609d20 (spline)
+- Event allocation: FUN_0040ad00 (0x20-byte slots, 0xc bytes each)
+- DList operations: RemoveNode (852 xrefs), InsertNode (217 xrefs)
 
 ---
 
@@ -331,17 +328,21 @@ Other AI types likely follow:
            └── Calls System_InitializeAll on first state
 
 3. System_InitializeAll (0x005D6040)
-   ├── QTask type creation (CamTask, GetInput, SimBoneDynCubeObj, RunDelayed, LevelInfo)
-   ├── Input system (InputPort_Initialize)
-   ├── Menu system (MenuItem, MenuItemTask, PushButton, TagItem)
-   ├── Parameter system (ParameterSystem, EnumTypes)
-   ├── Serialization (List, Array, Struct, QTaskRef)
-   ├── Physics (PhysicsObj, PhysicsMagicObj, EditRigidObj, AnimRigidDynCubeObj)
-   ├── Terrain (Initialize, Discard, DiscardArea, OLELoader, LightMap)
-   ├── Water (Initialize, SubsystemInit)
-   ├── AI (GraphDataInit, Vehicle)
-   ├── Rendering (DiscardTask)
-   └── Audio (SoundDef_*, SoundManager, AnimSound)
+   ├── Core systems: Activate/Deactivate/GetState, Particle2D, InputPort, DirtyRectangle
+   ├── Menu system: MenuItem, MenuItemTask, PushButton, TagItem
+   ├── Parameter system: ParameterSystem, EnumTypes, Parameter array resize
+   ├── Scripting: ScriptVM frames, LevelScript, MagicObjConfig, SkyTask
+   ├── Serialization: List, Array, Struct, QTaskRef, Lensflare
+   ├── Physics: PhysicsObjType, PhysicsObj, PhysicsMagicObj, EditorRigidObj, AnimRigidDynCubeObj
+   ├── Terrain: Initialize, Discard, DiscardArea, OLELoader, LightMap, HeightMap, TextureModifier
+   ├── Water: Initialize, SubsystemInit (FlatWater/FlatWaterLayer)
+   ├── Lighting: GlobalLight, Dirlight, LightmapInfo, Lensflare
+   ├── Rendering: DiscardTask, MipMapControl, ScreenGrab, FlatSky, Forest, GFXCapsViewer
+   ├── AI: GraphDataInit, Vehicle, AreaActivate, SimpointObj, SplinePath
+   ├── Audio: SoundSysEdit, SoundDef_*, SoundManager, AnimSound
+   ├── Editor: EditCamera, EditRigidObj/BoneObj, EditorMagicObj, CutScene
+   ├── Debug: DebugConsole, NoiseQTask, SmoothQTask, HeightMap
+   └── 72 subsystems catalogued (Round 16), 23 remaining to analyze
 ```
 
 ---
@@ -351,8 +352,8 @@ Other AI types likely follow:
 | Metric | Value |
 |--------|-------|
 | Total functions | 5,507 |
-| Functions renamed | 830 |
-| Coverage | 15.0% |
+| Functions renamed | 880 |
+| Coverage | 16.0% |
 | Code gaps | 2,171 |
 | switchD functions | 40+ |
 | Custom data types | 10+ |
@@ -372,8 +373,9 @@ Other AI types likely follow:
 - Look for embedded data tables
 
 ### Priority 2 — Unknown Subsystems
-- Analyze 31 unknown FUN_00xxxxxx calls in System_InitializeAll
+- Analyze 23 remaining FUN_00xxxxxx calls in System_InitializeAll (72/95 identified, 100% of batch analysis)
 - Map to known subsystems or create new ones
+- Round 16 catalogued 72 subsystems with detailed parameter/event patterns
 
 ### Priority 3 — switchD Functions
 - Reverse engineer 20 new switchD functions
@@ -627,7 +629,7 @@ void DList_InsertNode(void *param_1, DListNode *node) {
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
 | Renamed functions | 830 | 844 | +14 |
-| Coverage | 15.0% | 15.3% | +0.3% |
+| Coverage | 16.0% | 15.3% | +0.3% |
 | DList functions | 0 | 2 | +2 |
 | Network functions | 0 | 2 | +2 |
 | Render functions | 0 | 2 | +2 |

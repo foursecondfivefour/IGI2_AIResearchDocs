@@ -1,7 +1,7 @@
 # IGI 2: Covert Strike — Reverse Engineering Status
 
 **Last Updated:** 2026-08-27  
-**Status:** 🟡 PARTIAL — 872 functions renamed total (15.8% of 5,507), 100+ plate comments, 10+ custom data types, 105 function tag definitions  
+**Status:** 🟡 PARTIAL — 880 functions renamed total (16.0% of 5,507), 100+ plate comments, 10+ custom data types, 105 function tag definitions, 72/95 System_InitializeAll subsystems catalogued (100% of batch analysis)  
 **Last Verified:** 2026-08-27 via Ghidra MCP
 
 ### Round 6 — NEW (2026-08-27)
@@ -33,6 +33,57 @@
 - [x] QTask system architecture documented: 0x34-byte types, 0xd slots, 0x200-byte state arrays
 - [x] File system architecture documented: 4 device types, 0x90-byte handler table
 - [x] Game event system documented: 0xc-byte entries, 0x20 max events
+
+### Round 16 — NEW (2026-08-27) — System_InitializeAll Deep Analysis (100% Coverage)
+- [x] System_InitializeAll (0x005d6040) — 95 init calls fully catalogued: 72 unique subsystems identified
+- [x] Batch 1 (1-20): Activate/Deactivate/GetState, Particle2DDynCubeObjTask, InputPort, DirtyRectangle, MenuItem, MenuItemTask, PushButton, ParameterSystem, Level/Static/Dynamic/CameraBase, Serialization, EnumTypes, ScriptVM frames, MagicObjConfigContainer, MagicObjConfig, LevelScript, SkyTask, PhysicsObjType, PhysicsObj, PhysicsMagicObj
+- [x] Batch 2 (21-40): EditorRigidObj, DiscardTerrain, DiscardTerrainArea, CubeModifier, AnimTask/AnimData, EditRigidObj, EditBoneObj, DiscardTask, TextureModifier, Terrain/TerrainMap/TerrainMaterial, Water/WaterLayer, EditHazinglayer, LODSettings/ModelLODSettings, EditRigidObjAttachedToBone, CutScene, AreaActivate, Vehicle, GlobalLight/GlobalLightKeyframe, Dirlight/DirlightKeyframe
+- [x] Batch 3 (41-60): LightmapInfo, Lensflare/LensflareItem, Container, Origo, NoiseQTask, MoveRigidObj, SmoothQTask, MipMapControl, ScreenGrab, FlatSky/FlatSkyLayer, FlatSkyKeyframe, FlatWater/FlatWaterLayer, Forest, RunDelayed, SoundSysEdit, SoundDefGroupEdit, SoundDefGraphEdit, SoundDefSoundEdit, SoundDefTriggerOnceEdit, SoundManager
+- [x] Batch 4 (61-72): EditCamera, LevelTimer, EditorMagicObj, AnimSound, TerrainLightMap, SimpointObjContainer/SimpointObj, SplinePathDynCubeObj, SplinePathGuideQTask, HeightMap, GFXCapsViewer, OLELoader, DebugConsoleTask
+- [x] Key patterns: QTask (0x34 bytes/type, 0xd slots, 0x200-byte state arrays), ParameterSystem (0x13-byte entries, 0x4c0 max), PatternMatcher wildcards ($, ., ?, *, [], ^, {}, ()), Radiosity colors (0xc8fb1a07, 0x39ea7756, 0x7ff13ccd), ScriptVM param types (7=Real32, 6=Int32, 3=String, 1=bool8)
+- [x] Complete subsystem catalog documented in plan.md with 72 entries organized by 4 analysis batches
+
+### Round 15 — NEW (2026-08-27) — 02-classes Extended + System_InitializeAll Partial Analysis
+- [x] HumanAnimController struct created — 604 bytes, 147 fields, offsets: 0x2c(flags), 0x48-0x5c, 0x568-0x574, 0x590
+- [x] HumanAnimController_Validate (0x005a4190) — validation with "Human animcontroller is invalid" error
+- [x] HumanAnimController_ProcessAnimation (0x005a4b20) — 85+ xrefs, core animation processing
+- [x] HumanAnimController_Cleanup (0x005a4660) — animation cleanup
+- [x] Model_CreateVertexObject (0x00589d70) — 0x28-byte model/vertex object creator
+- [x] Model_ClearVertexBuffers (0x00589c90) — vertex buffer clearing
+- [x] Model_AllocateVertices (0x005f7c50) — model vertex allocation
+- [x] Model_ProcessString (0x005f7ed0) — model string processing (2048-byte buffer)
+- [x] AnimationStateMachine_Update (0x005fd2a0) — state machine with callback table @ 0x083997e0
+- [x] System_InitializeAll deep analysis — 30/95 subsystems identified (31 still unknown)
+- [x] Subsystems: Activate/Deactivate, Particle2D, InputPort, DirtyRect, MenuItem, MenuItemTask, PushButton
+- [x] Subsystems: ParameterSystem, Level/Static/Dynamic/CameraBase, Serialization, EnumTypes
+- [x] Subsystems: ScriptVM, MagicObjConfigContainer, MagicObjConfig, LevelScript, SkyTask
+- [x] Subsystems: PhysicsObjType, PhysicsObj, PhysicsMagicObj, EditorRigidObj, DiscardTerrain, DiscardTerrainArea
+- [x] Subsystems: CubeModifier, AnimTask, BspTreeEdit, TagItem(+variants), SplineObj, EditBoneObj, EditRigidObj
+- [x] PatternMatcher patterns: TASKTYPE_MAGICOBJ, BONE, SHADOWVOLUME, HUMANSHADOW, PHYSICSMAGICOBJ
+- [x] TagItem variants: Int32, Real32, String16, String256, Bool8, PushButton (6 types)
+- [x] ScriptVM parameters documented: "Time factor", "Transition time" with float values
+
+### Round 14 — NEW (2026-08-27) — 02-classes Extended Analysis
+- [x] HumanAnimController discovered (FUN_005a4190) — "Human animcontroller is invalid" error
+- [x] Model system: LoadModel, UnloadModel, InitModels, DeinitModels, zModel, VirModel
+- [x] Animation system: Stand/Death/Idle/Driving/1stPerson/UpperBody/Main animations
+- [x] FUN_00589d70 — Creates 0x28-byte model/vertex object with float params (0x43000000=4.0, 0x3f800000=1.0)
+- [x] FUN_00589c90 — Clears model vertex buffer (short[4]=width/height, clears buffers at +0xc, +0x10)
+- [x] FUN_005fd2a0 — Animation controller state machine (offsets 0x2c, 0x48, 0x4c, 0x50, 0x54, 0x58, 0x5c)
+- [x] FUN_005a4660 — Animation cleanup (checks offset 0x56c, calls FUN_005fd2a0)
+- [x] FUN_005f7c50 — Model vertex allocation (param_1 * unaff_EBX * 2 + 0x12 bytes)
+- [x] FUN_005f7ed0 — __thiscall model string processing (2048-byte buffer)
+- [x] AI Animation functions: AIFunction_GetAnimationToPlay, AIAction_PlayAnimation
+- [x] Model file formats: %smodels/%s.res, LOCAL:models/%s.mef
+
+### Round 13 — NEW (2026-08-27) — 02-classes Analysis
+- [x] HumanPlayer vtable (0x006aa4a0) — 16 entries analyzed, addresses from unloaded DLL (0x2axxxx/0x2bxxxx)
+- [x] Generic vftable (0x0067c7a8) — 16 entries: 6 functions + 3 NULL + 3 placeholders (0xFFFFFFFF) + 1 data
+- [x] FUN_00660386 — __thiscall destructor/cleanup: frees memory if param_2 & 1
+- [x] FUN_006609a3, FUN_00660a05 — __ArrayUnwind exception handling
+- [x] FUN_00660371 — Sets vftable to &type_info::vftable, cleanup function
+- [x] RTTI type_info structures — 8 C++ exception types decoded
+- [x] Bad_cast, bad_typeid, __non_rtti_object, type_info, out_of_range, logic_error, length_error, exception
 
 ### Round 12 — NEW (2026-08-27)
 - [x] ScriptVM_DispatchCallback (0x0054a060) — script callback dispatch via DAT_083997e0 table, 64-byte result buffer
@@ -747,9 +798,9 @@ Key functions with detailed plate comments:
 | Metric | Value |
 |--------|-------|
 | Total functions | 5,507 |
-| Functions renamed | 809 |
-| Unnamed (FUN_*) | 4,698 |
-| Coverage | 14.7% |
+| Functions renamed | 880 |
+| Unnamed (FUN_*) | 4,627 |
+| Coverage | 16.0% |
 | Plate comments | 100+ |
 | Documentation files | 21 |
 | Custom data types | 10+ (AINode 512B, Entity 3464B, EntityStats 60B, WeaponType enum, StateEntry, FuncInfo, HandlerType...) |

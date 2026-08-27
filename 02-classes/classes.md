@@ -1,8 +1,8 @@
 # Phase 2: Class Hierarchy & Data Structures
 
 **Status:** 🟡 PARTIAL  
-**Classes Identified:** 2 (HumanPlayer, HumanSoldier)  
-**Functions Documented:** 3 (entry, WinMain, matrix math)  
+**Classes Identified:** 3 game classes (HumanPlayer, HumanSoldier, HumanAnimController) + 8 C++ stdlib classes  
+**Functions Documented:** 10 (entry, WinMain, matrix math, destructor, 2x exception handlers, anim controller, model system)  
 **Confidence:** MEDIUM
 
 ---
@@ -340,3 +340,183 @@ All zeroed at load time, initialized by WinMain:
 - [ ] Reverse the state machine data structures
 - [ ] Identify all class member variables from usage patterns
 - [ ] Map vtable layouts for each class
+
+---
+
+## 2.11 HumanPlayer Vtable Analysis (0x006aa4a0) — Round 13
+
+**Status:** ANALYZED (addresses from unloaded DLL)  
+**Entries:** 16 function pointers (64 bytes)  
+**Location:** .rdata section  
+
+### Vtable Data (Hex):
+```
++0x00: 0x002b8778  (unloaded DLL)
++0x04: 0x002b8cc8  (unloaded DLL)
++0x08: 0x002b8118  (unloaded DLL) — X_HumanSoldier_InitStateStandThrowGrenade
++0x0C: 0x002b8a20  (unloaded DLL)
++0x10: 0x002b85e0  (unloaded DLL) — X_HumanPlayer_InitStateActivateCabinet
++0x14: 0x002b84d0  (unloaded DLL) — X_HumanPlayer_InitStateActivateDoor
++0x18: 0x002b8910  (unloaded DLL)
++0x1C: 0x002b8b30  (unloaded DLL)
++0x20: 0x002b8800  (unloaded DLL) — X_HumanPlayer_InitStateActivateStationaryGun
++0x24: 0x002b86f0  (unloaded DLL) — X_HumanPlayer_InitStateActivateTerminal
++0x28: 0x002b8aa8  (unloaded DLL) — X_HumanPlayer_InitStateActivateC4BombTBA
++0x2C: 0x002b8998  (unloaded DLL) — X_HumanPlayer_InitStateActivateGenericTBA
++0x30: 0x002b8c40  (unloaded DLL) — X_HumanPlayer_InitStateSilentKill
++0x34: 0x002a8545  (unloaded DLL)
++0x38: 0x002a8584  (unloaded DLL)
++0x3C: 0x002a85c1  (unloaded DLL)
++0x40: 0x002a85fb  (unloaded DLL)
+```
+
+### Known Mappings (from exports):
+| Offset | Exported Function | Ordinal |
+|--------|------------------|---------|
+| +0x08 | X_HumanSoldier_InitStateStandThrowGrenade | 9 |
+| +0x10 | X_HumanPlayer_InitStateActivateCabinet | 11 |
+| +0x14 | X_HumanPlayer_InitStateActivateDoor | 12 |
+| +0x20 | X_HumanPlayer_InitStateActivateStationaryGun | 15 |
+| +0x24 | X_HumanPlayer_InitStateActivateTerminal | 16 |
+| +0x28 | X_HumanPlayer_InitStateActivateC4BombTBA | 1 |
+| +0x2C | X_HumanPlayer_InitStateActivateGenericTBA | 4 |
+| +0x30 | X_HumanPlayer_InitStateSilentKill | 8 |
+
+### Note:
+The vtable addresses (0x2axxxx/0x2bxxxx) are from a DLL loaded at runtime at a different base address. The DLL was not included in the Ghidra project, so these addresses cannot be analyzed directly. However, the exported functions at 0x6bxxxx are in the main PE image but are in the .data section (not .text), suggesting they may be thunks or data references.
+
+---
+
+## 2.12 Generic Vftable Analysis (0x0067c7a8) — Round 13
+
+**Status:** FULLY ANALYZED  
+**Entries:** 16 slots (64 bytes read)  
+**Xrefs:** 9 (8 data + 1 code)  
+**Location:** .rdata section  
+
+### Vtable Structure:
+| Offset | Value | Type | Meaning |
+|--------|-------|------|---------|
+| +0x00 | 0x00660386 | Function | `__thiscall` destructor/cleanup |
+| +0x04 | 0x00000000 | NULL | Unimplemented/placeholder |
+| +0x08 | 0xFFFFFFFF | Placeholder | Reserved |
+| +0x0C | 0x0066092c | Data | Not analyzed as function |
+| +0x10 | 0x00660950 | Data | Not analyzed as function |
+| +0x14 | 0x00000000 | NULL | Unimplemented/placeholder |
+| +0x18 | 0xFFFFFFFF | Placeholder | Reserved |
+| +0x1C | 0x00000000 | NULL | Unimplemented/placeholder |
+| +0x20 | 0x006609a3 | Function | `__ArrayUnwind` exception handler |
+| +0x24 | 0x00000000 | NULL | Unimplemented/placeholder |
+| +0x28 | 0xFFFFFFFF | Placeholder | Reserved |
+| +0x2C | 0x00000000 | NULL | Unimplemented/placeholder |
+| +0x30 | 0x00660a05 | Function | `__ArrayUnwind` exception handler |
+| +0x34 | 0x00000000 | NULL | Unimplemented/placeholder |
+| +0x38 | 0x00202020 | Data | Padding/data (0x20 = space char) |
+
+### Function Details:
+
+**FUN_00660386 (offset +0x00):**
+```c
+void* __thiscall FUN_00660386(void* this, byte param_2) {
+    FUN_00660371();
+    if (param_2 & 1) {
+        _free(this);
+    }
+    return this;
+}
+```
+- Virtual destructor/cleanup method
+- Calls FUN_00660371 (vftable setup)
+- Frees object if param_2 & 1
+
+**FUN_006609a3 (offset +0x20):**
+```c
+void FUN_006609a3(void) {
+    int unaff_EBP;
+    if (*(int *)(unaff_EBP + -0x1c) == 0) {
+        __ArrayUnwind(*(void **)(unaff_EBP + 8),
+                      *(uint *)(unaff_EBP + 0xc),
+                      *(int *)(unaff_EBP + 0x10),
+                      *(_func_void_void_ptr **)(unaff_EBP + 0x14));
+    }
+}
+```
+- Exception handling: array unwind
+- Uses __ArrayUnwind with 4 parameters
+
+**FUN_00660a05 (offset +0x30):**
+```c
+void FUN_00660a05(void) {
+    int unaff_EBP;
+    if (*(int *)(unaff_EBP + -0x1c) == 0) {
+        __ArrayUnwind(*(void **)(unaff_EBP + 8),
+                      *(uint *)(unaff_EBP + 0xc),
+                      *(int *)(unaff_EBP + -0x20),
+                      *(_func_void_void_ptr **)(unaff_EBP + 0x18));
+    }
+}
+```
+- Exception handling: array unwind (variant)
+- Similar to FUN_006609a3 but different parameter offsets
+
+### Xref Sources:
+| Address | Type | Description |
+|---------|------|-------------|
+| 0x00660371 | CODE | FUN_00660371 writes to vftable |
+| 0x006aedc4 | DATA | bad_cast type_info |
+| 0x006aeddc | DATA | bad_typeid type_info |
+| 0x006aedf8 | DATA | __non_rtti_object type_info |
+| 0x006aee18 | DATA | type_info type_info |
+| 0x006afdec | DATA | std::out_of_range type_info |
+| 0x006afe10 | DATA | std::logic_error type_info |
+| 0x006afe30 | DATA | std::length_error type_info |
+| 0x006afe50 | DATA | std::exception type_info |
+
+---
+
+## 2.13 C++ RTTI Type Info Structures — Round 13
+
+### MSVC Name Mangling Pattern:
+All RTTI strings use MSVC name mangling: `.?AV<class_name>@@` or `.?AV<class_name>@@std@@`
+
+### Decoded Type Info Structures:
+| Address | Mangled Name | C++ Class | Base Class |
+|---------|-------------|-----------|------------|
+| 0x006aedc4 | `.?AVbad_cast@@` | `bad_cast` | `exception` |
+| 0x006aeddc | `.?AVbad_typeid@@` | `bad_typeid` | `exception` |
+| 0x006aedf8 | `.?AV__non_rtti_object@@` | `__non_rtti_object` | (unknown) |
+| 0x006aee18 | `.?AVtype_info@@` | `type_info` | (unknown) |
+| 0x006afdec | `.?AVout_of_range@@std@@` | `std::out_of_range` | `std::logic_error` |
+| 0x006afe10 | `.?AVlogic_error@@std@@` | `std::logic_error` | `std::exception` |
+| 0x006afe30 | `.?AVlength_error@@std@@` | `std::length_error` | `std::exception` |
+| 0x006afe50 | `.?AVexception@@` | `exception` | (base) |
+
+### Inheritance Hierarchy (Deduced):
+```
+exception (base)
+├── logic_error
+│   └── out_of_range
+├── bad_cast
+├── bad_typeid
+└── length_error
+
+__non_rtti_object (standalone)
+type_info (standalone, RTTI base)
+```
+
+### FUN_00660371 — Vftable Setup:
+```c
+void __fastcall FUN_00660371(undefined4* param_1) {
+    *param_1 = &type_info::vftable;
+    if ((void*)param_1[1] != NULL) {
+        _free((void*)param_1[1]);
+    }
+}
+```
+- Sets vftable pointer to `&type_info::vftable`
+- Frees old vftable if present
+- Called from FUN_00660386 (destructor)
+
+---
+
+## Next Steps

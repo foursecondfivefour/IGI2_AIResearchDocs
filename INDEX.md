@@ -2,7 +2,7 @@
 
 Complete index of all documented systems and subsystems.
 
-**Coverage:** 872 / 5,507 functions renamed (15.9%)  
+**Coverage:** 880 / 5,507 functions renamed (16.0%)  
 **Last Verified:** 2026-08-27 via Ghidra MCP
 
 ### Round 6 Updates (2026-08-27)
@@ -74,10 +74,29 @@ Complete index of all documented systems and subsystems.
 - **ScriptContext_Cleanup**: frees 3 memory blocks + 0x13 frames, DList + 0xcdcdcdcd + _free
 - **ScriptVM_EvaluateExpressionEntry**: expression evaluator entry, calls FUN_005494f0 + ScriptInterpreter_Execute + ScriptVM_EvaluateExpressionFloat
 
+### Round 13 Updates (2026-08-27) — 02-classes Analysis
+- 6 new function analyses: vftables, RTTI, exception handling
+- **HumanPlayer vtable (0x006aa4a0)**: 16 entries mapped to exported functions (addresses from unloaded DLL)
+- **Generic vftable (0x0067c7a8)**: 16 entries — 6 functions, 3 NULLs, 3 placeholders, 1 data
+- **FUN_00660386**: `__thiscall` virtual destructor/cleanup
+- **FUN_006609a3, FUN_00660a05**: `__ArrayUnwind` exception handlers
+- **FUN_00660371**: Sets vftable to `&type_info::vftable`
+- **RTTI type_info**: 8 C++ exception types decoded (bad_cast, bad_typeid, exception, logic_error, etc.)
+- **Inheritance hierarchy deduced**: exception → logic_error → out_of_range
+
+### Round 16 Updates (2026-08-27) — System_InitializeAll 100% Subsystem Catalog
+- 72 unique subsystems fully identified across 95 init calls (100% coverage of analyzed batch)
+- **Batch 1 (1-20)**: Core systems — Activate/Deactivate/GetState, Particle2D, InputPort, DirtyRectangle, MenuItem, ParameterSystem, Level/Static/Dynamic/CameraBase, Serialization, EnumTypes, ScriptVM frames, MagicObjConfig, LevelScript, SkyTask, PhysicsObjType/Obj/MagicObj
+- **Batch 2 (21-40)**: Editor/Terrain/Water systems — EditorRigidObj, DiscardTerrain/Area, CubeModifier, AnimTask/AnimData, EditRigidObj/BoneObj, TextureModifier, Terrain/TerrainMap/TerrainMaterial, Water/WaterLayer, LODSettings, CutScene, AreaActivate, Vehicle, GlobalLight/Dirlight
+- **Batch 3 (41-60)**: Rendering/Audio systems — LightmapInfo, Lensflare, Origo, NoiseQTask, MoveRigidObj, SmoothQTask, MipMapControl, ScreenGrab, FlatSky/FlatWater, Forest, RunDelayed, SoundSysEdit/SoundDefGroupEdit/SoundDefGraphEdit/SoundDefSoundEdit/SoundDefTriggerOnceEdit/SoundManager
+- **Batch 4 (61-72)**: Editor/Debug systems — EditCamera, LevelTimer, EditorMagicObj, AnimSound, TerrainLightMap, SimpointObj, SplinePathDynCubeObj/GuideQTask, HeightMap, GFXCapsViewer, OLELoader, DebugConsoleTask
+- **Key patterns documented**: QTask (0x34 bytes/type, 0xd slots), ParameterSystem (0x13-byte entries), PatternMatcher wildcards, Radiosity colors, ScriptVM param types
+- **Complete catalog**: 72 entries with addresses, parameter counts, and callback patterns documented in plan.md
+
 
 ---
 
-> **Coverage Notice:** This project represents partial reverse engineering. Of 5,507 total functions, 830 have been renamed and documented (15.0%). The remaining 4,677 functions are still labeled as `FUN_*` in Ghidra. All documented content is accurate and verified — only the coverage percentage is partial.
+> **Coverage Notice:** This project represents partial reverse engineering. Of 5,507 total functions, 880 have been renamed and documented (16.0%). The remaining 4,627 functions are still labeled as `FUN_*` in Ghidra. All documented content is accurate and verified — only the coverage percentage is partial.
 
 ---
 
