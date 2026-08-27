@@ -1,9 +1,10 @@
 # Phase 5: Resource File Formats — IGI 2: Covert Strike
 
-**Status:** ✅ REVERSED + ROUND 5 ENHANCED  
+**Status:** 🟡 PARTIAL — 50+ functions renamed  
 **Formats Documented:** 15+  
 **Functions Documented:** 50+ (25+ Round 5 additions)  
-**Confidence:** HIGH
+**Confidence:** HIGH  
+**Verified:** 2026-08-26 via Ghidra MCP
 
 ---
 

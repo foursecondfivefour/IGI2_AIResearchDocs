@@ -1,8 +1,17 @@
 # Phase 4: QVM Scripting System — IGI 2: Covert Strike
 
-**Status:** ✅ REVERSED + ROUND 5 ENHANCED  
+**Status:** 🟡 PARTIAL — 65+ functions renamed  
 **Functions Documented:** 65+ (40+ original + 25 Round 5)  
-**Confidence:** HIGH
+**Confidence:** HIGH  
+**Verified:** 2026-08-27 via Ghidra MCP
+
+### Round 6 Update (2026-08-27)
+- [x] RunDelayed QTask — new global (DAT_07b54d4c)
+- [x] CamTask — new global (DAT_006b022c)
+- [x] GetInput — new global (DAT_07b524a8)
+- [x] LevelInfo — new global (DAT_006aff04)
+- [x] SimBoneDynCubeObj — new global (DAT_006b0268)
+- [x] SerializeList, SerializeArray, SerializeStruct, SerializeQTaskRef — new serialization types
 
 ---
 

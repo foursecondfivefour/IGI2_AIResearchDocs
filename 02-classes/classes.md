@@ -284,7 +284,25 @@ Frame rate limit (30/60/120/unlimited)
 
 ---
 
-## 2.9 Known Data Addresses
+## 2.9 New AI Types Discovered (2026-08-27)
+
+### HUMANAI_TYPE_C1_NORMAL_SOLDIER
+**Address:** 0x006b9830 (string pointer)  
+**Xrefs:** 8  
+
+A new AI type string discovered in the binary. This is likely the type identifier for standard C1 (Covert 1) soldier AI. The naming convention suggests:
+- **C1** — Covert 1 (James "Jimmy" Riggs, the player character)
+- **NORMAL_SOLDIER** — Standard enemy soldier type
+
+### Other String References
+| Address | String | Xrefs | Purpose |
+|---------|--------|-------|---------|
+| 0x006bc0e8 | "Jones" | 9 | NPC name / character reference |
+| 0x006aed04 | "Sunday" | 6 | Day of week (part of date/time system) |
+
+---
+
+## 2.10 Known Data Addresses
 
 ### Global Configuration Block (0x006c0600-0x006c0900)
 All zeroed at load time, initialized by WinMain:

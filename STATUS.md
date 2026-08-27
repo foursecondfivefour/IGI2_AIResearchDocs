@@ -1,13 +1,95 @@
 # IGI 2: Covert Strike — Reverse Engineering Status
 
-**Last Updated:** 2026-08-26  
-**Status:** ✅ GHIDRA ENHANCEMENT ROUND 5 COMPLETE — 445+ functions renamed, 96+ plate comments added, 5 data types created, 16 function tags, 5 subsystem docs updated
+**Last Updated:** 2026-08-27  
+**Status:** 🟡 PARTIAL — 872 functions renamed total (15.8% of 5,507), 100+ plate comments, 10+ custom data types, 105 function tag definitions  
+**Last Verified:** 2026-08-27 via Ghidra MCP
+
+### Round 6 — NEW (2026-08-27)
+- [x] WinMain_CRTStartup (0x00404280) — renamed from FUN_00404280, plate comment added
+- [x] System_InitializeAll (0x005D6040) — renamed from FUN_005d6040, plate comment added
+- [x] Master init pipeline documented (90+ subsystems)
+- [x] Code gaps analysis: 2171 gaps found
+- [x] vftable discovered @ 0x0067c7a8 (9 xrefs)
+- [x] New AI types: HUMANAI_TYPE_C1_NORMAL_SOLDIER
+- [x] switchD catalog expanded: 40+ total
+- [x] Config callback table: 48 entries (Window, WinInput, Track, Editor, Server, Player, Password, Zbias, Config, SessionDir, FPSLock)
+
+### Round 7 — NEW (2026-08-27)
+- [x] QTaskType_Register (0x0040adf0) — 372 xrefs, type registration with 0x34-byte entries
+- [x] QTaskType_Dispatch (0x0040af30) — 375 xrefs, cleanup/destructor dispatch
+- [x] GameEvent_Alloc (0x0040aca0) — 330 xrefs, 0xc-byte event slots, 0x20 max
+- [x] QTaskList_FindByType (0x0040b2f0) — 313 xrefs, linked list search
+- [x] QTaskType_IsDerivedFrom (0x0040b3f0) — 206 xrefs, inheritance chain traversal
+- [x] QTaskType_ClearActive (0x0040adc0) — 234 xrefs, active flag clearing
+- [x] QTaskList_FindByTypeID (0x0040b350) — 183 xrefs, type ID lookup
+- [x] QTaskList_DestroyAll (0x0040bb00) — 114 xrefs, full list cleanup
+- [x] Game_GetDebugFlag (0x0040ade0) — 176 xrefs, global flag access
+- [x] FileSys_Read (0x0040c6d0) — 41 xrefs, device handler dispatch, 0x90-byte entries
+- [x] FileSys_Close (0x0040cf20) — 37 xrefs, handle cleanup
+- [x] CommandLine_Process (0x0040d020) — 32 xrefs, 1024-byte buffer, callback dispatch
+- [x] FileSys_ParsePath (0x0040c330) — 35 xrefs, Windows path parsing (C:\...)
+- [x] QTaskList_FindByTypeOffset (0x0040b380) — 28 xrefs, offset-based search
+- [x] Pooled allocator FUN_0055b820 identified (game code, below CRT boundary)
+- [x] QTask system architecture documented: 0x34-byte types, 0xd slots, 0x200-byte state arrays
+- [x] File system architecture documented: 4 device types, 0x90-byte handler table
+- [x] Game event system documented: 0xc-byte entries, 0x20 max events
+
+### Round 12 — NEW (2026-08-27)
+- [x] ScriptVM_DispatchCallback (0x0054a060) — script callback dispatch via DAT_083997e0 table, 64-byte result buffer
+- [x] ScriptContext_Cleanup (0x0054a160) — frees 3 memory blocks + 0x13 script frames, DList + 0xcdcdcdcd + _free
+- [x] ScriptInterpreter_Execute (0x0054a2a0) — main script loop, tokenization, .isExists, "this." calls, // comments, 0x100 depth stack
+- [x] ScriptVM_EvaluateExpressionEntry (0x0054a5f0) — expression evaluator entry point, calls FUN_005494f0 + ScriptVM_EvaluateExpressionFloat
+
+### Round 11 — NEW (2026-08-27)
+- [x] Mem_Alloc (0x0054c240) — 667 xrefs, custom allocator with alignment, 0xabababab debug fill, DList tracking, allocation failure handler
+- [x] DList_RemoveFromContext (0x005520e0) — 89 xrefs, remove node from context DList, update prev/next pointers
+- [x] ScriptVM_EvaluateToString (0x00565e40) — 97 xrefs, string conversion for script expressions, concat support
+- [x] PatternMatcher_Match (0x0056ec80) — 65 xrefs, wildcard pattern matching ($, ., ?, *, [], ^, {}, [])
+
+### Round 10 — NEW (2026-08-27)
+- [x] ScriptVM_AddParameter (0x005772d0) — 1754 xrefs, add parameter to script VM context, 0x14-byte entry with type/value/name
+- [x] SymbolTable_Add (0x0056a3c0) — 1101 xrefs, symbol registry with string name + 6 params + callback via DAT_07ab6c10
+- [x] SymbolTable_Remove (0x0056a4c0) — 666 xrefs, symbol removal with "Undefined symbol" error, DList + 0xcdcdcdcd fill + free
+- [x] ScriptVM_ReadParameter (0x005697f0) — 518 xrefs, read from script VM context (string ptr/raw value/strncpy modes)
+- [x] ScriptVM_EvaluateExpression (0x005661c0) — 303 xrefs, int expression evaluator: add/sub/mul/div/bitwise/cmp/assign/ternary
+- [x] ScriptVM_EvaluateExpressionFloat (0x00566730) — 229 xrefs, float10 expression evaluator, same opcodes as int variant
+- [x] MemoryPool_Free (0x0055b880) — 214 xrefs, pool free with ref counting, DList removal, 0xcdcdcdcd debug fill
+
+### Round 9 — NEW (2026-08-27)
+- [x] EventDispatcher_DispatchCallback (0x0040ac10) — 46 xrefs, callback lookup via DAT_083997e0 + type*0x1ff
+- [x] String_ParseInput (0x0040dea0) — 46 xrefs, 2052-byte stack buffer, parse/convert pipeline
+- [x] Memory_ValidateBlock (0x004451b0) — 47 xrefs, alignment check, bounds validation
+- [x] MemoryPool_Allocate (0x00445270) — 33 xrefs, 0xc-byte header + block pool allocator
+- [x] Memory_Allocate (0x0041f3f0) — 27 xrefs, wrapper around FUN_0054c240
+- [x] Memory_Deallocate (0x0041f410) — 27 xrefs, 0xcdcdcdcd debug fill, DList_RemoveNode, _free
+- [x] RenderObject_Create (0x00463680) — 27 xrefs, alloc + init + DList_InsertNode
+- [x] TaskCallback_Dispatch (0x0040e300) — 120 xrefs, indexed callback lookup
+- [x] PooledAllocator_Alloc (0x0040baa0) — 161 xrefs, wrapper around FUN_0055b820
+- [x] Config_LookupString (0x004335d0) — 49 xrefs, case-insensitive __stricmp search
+- [x] ResourceManager_LoadAll (0x00425a10) — 64 xrefs, calls ResourceManager_Load(1)
+- [x] RenderTask_Cleanup (0x004637c0) — 30 xrefs, callback + DList_RemoveNode + reinsert
+
+### Round 8 — NEW (2026-08-27)
+- [x] DList_RemoveNode (0x00445540) — 852 xrefs, doubly linked list node removal
+- [x] FatalError_Handler (0x00446000) — 553 xrefs, fatal error with callback dispatch
+- [x] Server_LogMessage (0x0041d470) — 347 xrefs, timestamped server logging
+- [x] DList_InsertNode (0x00445460) — 217 xrefs, doubly linked list node insertion
+- [x] ResourceManager_Load (0x00425740) — 143 xrefs, GLOB:/ and LOCA:/ resource loading
+- [x] D3D_ErrorString (0x00448530) — 129 xrefs, D3DERR_* HRESULT to string converter
+- [x] SoundDef_Find (0x00430730) — 100 xrefs, sound definition with GameEvent_Alloc
+- [x] Performance_GetCounter (0x00435820) — performance counter with millisecond conversion
+- [x] Render_DrawParticles (0x00427730) — 162 xrefs, D3D particle/effects rendering
+- [x] Network_SendPacket (0x00419300) — 75 xrefs, network packet with 8180-byte buffer
+- [x] QTaskList_FindByTypeAndCallback (0x004194c0) — 183 xrefs, find + callback at offset 0x28
+- [x] QTaskList_Add (0x0041f310) — 60 xrefs, array-based task list append with overflow check
+- [x] QTaskList_Remove (0x0041f340) — 56 xrefs, array-based task list removal by value
+- [x] EventDispatcher_Dispatch (0x004378e0) — 61 xrefs, event handler table dispatch
 
 ---
 
-## COMPLETED SYSTEMS (14 of 15)
+## ANALYZED SYSTEMS (14 of 15) — All PARTIAL coverage
 
-### 01. PE Structure ✅
+### 01. PE Structure 🟡 PARTIAL
 - Entry point, CRT, WinMain (0x0065d36d, 0x00404280)
 - 80+ imports across 11 DLLs
 - 38 exported C++ methods
@@ -30,7 +112,7 @@
 - 30+ config API functions
 - Graph nav: 1024 nodes, 12 properties
 
-### 05. Weapons ✅
+### 05. Weapons 🟡 PARTIAL
 - 11 categories, 8 types
 - 27 parameter fields
 - Grenade system
@@ -77,7 +159,7 @@
 - Player profiles system
 - Save system (6 slots)
 
-### 12. Networking ✅
+### 12. Networking 🟡 PARTIAL
 - UDP-based client/server
 - 27 GM message types
 - 7 game modes
@@ -99,9 +181,9 @@
 
 ---
 
-## GHIDRA ENHANCEMENT — IN PROGRESS
+## GHIDRA ENHANCEMENT — IN PROGRESS (807 total renamed across all rounds)
 
-### ✅ COMPLETED RENAMES (55+ functions)
+### COMPLETED RENAMES — ROUND 1 (55+ functions)
 
 #### QVM System (12 functions)
 | Address | Name | Purpose |
@@ -391,7 +473,7 @@ Key functions with detailed plate comments:
 |---------|------|---------|
 | 0x0054f970 | DebugConsole_DrawConsoleWindow | Debug console with background alpha, command history |
 
-### ✅ PLATE COMMENTS ADDED ROUND 4 (6 detailed comments)
+### PLATE COMMENTS ADDED ROUND 4 (6 detailed comments)
 - **CollisionEval_Initialize** — Registers 6 message IDs, zeros 80 bytes global state
 - **Human_Action** — Full Human subsystem: 15+ msg IDs, 40+ handlers, 80+ params, collision flags
 - **Serialization_Handler_Serialize** — Linked list iteration, dispatch table lookup
@@ -650,7 +732,7 @@ Key functions with detailed plate comments:
 | MenuManager_Initialize (0x00433c50) | menu, ui |
 | Terrain_MaterialLoad (0x005512e0) | terrain, level |
 
-### ✅ PLATE COMMENTS ADDED ROUND 5 (6 detailed comments)
+### PLATE COMMENTS ADDED ROUND 5 (6 detailed comments)
 - **PhysicsObj_Action** — Core PhysicsObj handler with Move, UpdateOrientation, Hit callbacks
 - **Sound_InitializeMiles** — Miles Sound System init: _AIL_startup, 3D provider selection, sample pool
 - **InputSubsystem_RegisterTypes** — ~100+ input QTask types, movement bindings, keyboard devices
@@ -664,25 +746,30 @@ Key functions with detailed plate comments:
 
 | Metric | Value |
 |--------|-------|
-| Functions analyzed | ~1,800 / ~5,518 |
-| Functions renamed | 445+ |
-| Comments added | 96+ plate comments |
-| Documentation | 24 files, 15 directories |
-| Subagents used | 19 |
+| Total functions | 5,507 |
+| Functions renamed | 809 |
+| Unnamed (FUN_*) | 4,698 |
+| Coverage | 14.7% |
+| Plate comments | 100+ |
+| Documentation files | 21 |
+| Custom data types | 10+ (AINode 512B, Entity 3464B, EntityStats 60B, WeaponType enum, StateEntry, FuncInfo, HandlerType...) |
+| Function tags | 105 definitions (weapon=79, player=29, state=10, scripting=11, qtask=9, ...) |
+| Import table | 80+ from 11 DLLs |
+| Export table | 38 entries |
+| Memory segments | 7 |
+| Memory size | ~136 MB |
 | Formats decoded | 15+ |
-| Audio functions | 52+ mapped |
+| Audio functions | 52+ renamed |
 | Network modes | 7 |
 | QVM opcodes | 30+ |
 | A* pathfinding | Documented (2000-node capacity) |
 | MEF chunks | 13 types decoded |
 | D3D API dispatch | 96 entries |
 | Network packet types | 20+ identified |
-| Data types created | 5 (WeaponType enum, WeaponData, AINode, StateEntry, EntityStats) |
 | Global data typed | 4 globals with plate comments |
-| Function tags added | 16 subsystem tags |
 | Scripting functions | 25+ renamed (Opcode, QTask, LevelScript, Train, etc.) |
 
-### ✅ DOCUMENTATION UPDATES (Priority 3)
+### DOCUMENTATION UPDATES (Priority 3)
 
 All 5 subsystem documentation files updated with Round 5 renames:
 

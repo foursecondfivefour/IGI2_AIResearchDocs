@@ -1,8 +1,14 @@
 # Phase 3.3: Rendering System — IGI 2: Covert Strike
 
-**Status:** ✅ REVERSED  
+**Status:** 🟡 PARTIAL — 20+ functions renamed  
 **Functions Documented:** 20+  
-**Confidence:** HIGH
+**Confidence:** HIGH  
+**Verified:** 2026-08-27 via Ghidra MCP
+
+### Round 6 Update (2026-08-27)
+- [x] System_InitializeAll (0x005D6040) — renamed, master init for rendering subsystems
+- [x] Rendering_InitDiscardTask (FUN_005f6840) — already renamed
+- [x] Terrain_OLELoader (FUN_00604430) — already renamed
 
 ---
 

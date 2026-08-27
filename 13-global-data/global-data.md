@@ -1,8 +1,16 @@
 # Phase 10: Global Data Structures — IGI 2: Covert Strike
 
-**Status:** ✅ REVERSED  
+**Status:** 🟡 PARTIAL — 13 data areas mapped  
 **Data Areas:** 13 documented  
-**Confidence:** HIGH
+**Confidence:** HIGH  
+**Verified:** 2026-08-27 via Ghidra MCP
+
+### Round 6 Update (2026-08-27)
+- [x] vftable @ 0x0067c7a8 — 9 xrefs, C++ virtual table
+- [x] Config callback table — 48 entries (DAT_006c0638..DAT_006c0700)
+- [x] Runtime config globals — DAT_006c0700..DAT_006c09dc
+- [x] String references — Jones, Sunday, HUMANAI_TYPE_C1_NORMAL_SOLDIER
+- [x] QTask globals — RunDelayed, CamTask, GetInput, LevelInfo, SimBoneDynCubeObj
 
 ---
 
@@ -204,3 +212,101 @@ Accessed via FUN_004b0a00:
 | HIGH | 0x006ab000-0x006ab600 | Texture format tables |
 | MEDIUM | 0x00685b68-0x00685c80 | Debug console strings |
 | MEDIUM | 0x0068b888-0x0068b8d0 | HUD/UI strings |
+
+---
+
+## New Data Areas (Round 6 — 2026-08-27)
+
+### 14. Virtual Function Table (vftable)
+**Address:** 0x0067c7a8  
+**Xrefs:** 9  
+**Type:** C++ virtual function table  
+
+A vftable with 9 cross-references. Likely belongs to one of the CDAPFN0506 class hierarchies (HumanPlayer or HumanSoldier state machine).
+
+### 15. Configuration Callback Table
+**Address:** 0x006c0638 - 0x006c0700  
+**Size:** 48 entries (0x30 × 4 bytes)  
+**Purpose:** Config subsystem callback function pointers  
+
+All entries zeroed at load time, populated by WinMain via FUN_0041d9e0 calls:
+```
+Config callbacks registered:
+1. Window (0x00403f20)
+2. WinInput (0x00403f60)
+3. Track (0x00404060)
+4. Editor (0x00403f70)
+5. Server (0x00403f80)
+6. DAT_006a6878 (0x00403fb0)
+7. DAT_006a6874 (0x00403fd0)
+8. Player (0x00403ff0)
+9. Password (0x00404040)
+10. Zbias (0x00404080)
+11. Config (0x00404010)
+12. SessionDir (0x00404030)
+13. FPSLock (0x00403f30)
+```
+
+### 16. Runtime Config Globals
+**Address:** 0x006c0700 - 0x006c09dc  
+**Size:** ~0x200 bytes  
+**Purpose:** Runtime configuration state  
+
+| Address | Variable | Value/Type |
+|---------|----------|------------|
+| 0x006c0790 | hInstance | HINSTANCE (module handle) |
+| 0x006c0794 | hWnd | HWND (window handle) |
+| 0x006c0798 | cmdLineParam | LPSTR (command line) |
+| 0x006c079c | filesysCfg | "filesys.cfg" |
+| 0x006c07a8 | appName | "Innerloop" |
+| 0x006c07b0 | configFlag1 | 0 |
+| 0x006c07b4 | configFlag2 | 1 |
+| 0x006c07bc | configFlag3 | 1 |
+| 0x006c07c4 | configFlag4 | 1 |
+| 0x006c07cc | configFlag5 | 0 |
+| 0x006c07d0 | configFlag6 | 0 |
+| 0x006c07d4 | sleepMode | 1 |
+| 0x006c07d8 | fullscreen | 1 |
+| 0x006c07e0 | configFlag7 | 1 |
+| 0x006c07e8 | configFlag8 | 0 |
+| 0x006c07ec | configFlag9 | 0 |
+| 0x006c07f0 | forceQuit | 0 |
+| 0x006c07f8 | configFlag10 | 0 |
+| 0x006c0804 | callbackPtr | function pointer |
+| 0x006c090c | playerName | "MR_NOT_NAMED" (0x40 bytes) |
+| 0x006c091c | playerTag | "MR_NOT_NAMED" (0x40 bytes) |
+| 0x006c099c | networkCfg | "networkconfig.cfg" (0x40 bytes) |
+
+### 17. QTask Global Pointers
+**Address:** Various  
+
+| Address | Variable | QTask Name |
+|---------|----------|------------|
+| 0x006b022c | DAT_006b022c | CamTask |
+| 0x007b524a8 | DAT_07b524a8 | GetInput |
+| 0x006b0268 | DAT_006b0268 | SimBoneDynCubeObj |
+| 0x07b54d4c | DAT_07b54d4c | RunDelayed |
+| 0x07b54d50 | DAT_07b54d50 | RunDelayed config (0x18 bytes) |
+| 0x006aff04 | DAT_006aff04 | LevelInfo |
+
+### 18. String References
+**Address:** Various  
+
+| Address | String | Xrefs | Purpose |
+|---------|--------|-------|---------|
+| 0x0067c7a8 | vftable | 9 | C++ virtual table |
+| 0x006bc0e8 | "Jones" | 9 | NPC name |
+| 0x006b9830 | "HUMANAI_TYPE_C1_NORMAL_SOLDIER" | 8 | AI type name |
+| 0x006aed04 | "Sunday" | 6 | Day of week |
+| 0x0068261c | "TELNET_OPTION_UNKNOWN" | 5 | Telnet protocol |
+| 0x00682624 | "TELNET_OPTION_ECHO" | 5 | Telnet protocol |
+
+### 19. Serialization Type Registrations
+**Address:** 0x07bb77b0, 0x07bab354, 0x07babdc0, 0x07bab358  
+
+New serialization types registered in System_InitializeAll:
+- **SerializeList** (0x07bb77b0) — List serialization with 2 callbacks
+- **SerializeArray** (0x07bab354) — Array serialization with 2 callbacks
+- **SerializeStruct** (0x07babdc0) — Struct serialization with 2 callbacks
+- **SerializeQTaskRef** (0x07bab358) — QTask reference serialization with 2 callbacks
+

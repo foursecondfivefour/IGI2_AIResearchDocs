@@ -1,8 +1,18 @@
 # Phase 6: Audio System — IGI 2: Covert Strike
 
-**Status:** ✅ REVERSED + ROUND 5 ENHANCED  
+**Status:** 🟡 PARTIAL — 65+ functions renamed  
 **Functions Documented:** 65+ (50+ original + 15 Round 5)  
-**Confidence:** HIGH
+**Confidence:** HIGH  
+**Verified:** 2026-08-27 via Ghidra MCP
+
+### Round 6 Update (2026-08-27)
+- [x] System_InitializeAll (0x005D6040) — master init for audio subsystems
+- [x] SoundDef_Group_Register (FUN_006111a0) — already renamed
+- [x] SoundDef_Graph_Register (FUN_00610240) — already renamed
+- [x] SoundDef_Sound_Register (FUN_0060d1c0) — already renamed
+- [x] SoundDef_TriggerOnce_Register (FUN_006099e0) — already renamed
+- [x] SoundManager_Register (FUN_00606dd0) — already renamed
+- [x] AnimSound_Register (FUN_00605cd0) — already renamed
 
 ---
 

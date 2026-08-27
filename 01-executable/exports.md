@@ -139,9 +139,31 @@ CDAPFN0506 (export namespace)
 
 ---
 
+## Virtual Table (vftable)
+
+**Address:** 0x0067c7a8  
+**Xrefs:** 9  
+
+A C++ virtual function table is located at this address with 9 cross-references. This likely corresponds to one of the exported class hierarchies (CDAPFN0506::HumanPlayer or HumanSoldier).
+
+---
+
+## New Discoveries (2026-08-27)
+
+### vftable Reference
+- **vftable @ 0x0067c7a8** — 9 xrefs, C++ virtual table for state machine classes
+
+### String References
+- **PTR_s_jones_006bc0e8** — 9 xrefs (name string reference)
+- **PTR_s_HUMANAI_TYPE_C1_NORMAL_SOLDIER_006b9830** — 8 xrefs (AI type name)
+- **PTR_s_Sunday_006aed04** — 6 xrefs (day name)
+
+---
+
 ## Next Steps
 
 - [ ] Find actual code bodies for these exported functions (search callers)
 - [ ] Discover more classes — these 2 classes are likely a subset
 - [ ] Identify vtable layouts from ordinal references
 - [ ] Cross-reference with research data for expected state machines
+- [ ] Map vftable @ 0x0067c7a8 to specific class hierarchy

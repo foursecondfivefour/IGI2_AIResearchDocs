@@ -1,8 +1,9 @@
 # Phase 3.1: AI System — IGI 2: Covert Strike
 
-**Status:** ✅ REVERSED  
+**Status:** 🟡 PARTIAL — 30+ functions renamed  
 **Functions Documented:** 30+  
-**Confidence:** HIGH
+**Confidence:** HIGH  
+**Verified:** 2026-08-26 via Ghidra MCP
 
 ---
 
